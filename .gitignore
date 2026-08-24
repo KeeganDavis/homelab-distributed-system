@@ -1,3 +1,42 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl.backup
+crash.log
+
+# Ansible secrets
+*vault-password*
+.vault_pass
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IDE / OS
+.vscode/settings.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs / runtime data
+*.log
+logs/
+tmp/
+temp/
+
+# Databases / volumes
+postgres-data/
+redis-data/
+kafka-data/
+
+# Generated artifacts
+dist/
+build/
+coverage/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
