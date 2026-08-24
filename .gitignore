@@ -1,3 +1,6 @@
+# Pull request file
+.github/pull_request_description.md
+
 # Terraform
 **/.terraform/
 *.tfstate
