@@ -53,6 +53,10 @@ Verification completed:
 - Both worker VMs use fixed 4 GB memory with Hyper-V dynamic memory disabled.
 - The Windows host can reach both workers on TCP port 22 over `drl-lab`.
 - Both worker guest firewalls are active with default-deny incoming traffic and SSH allowed from `192.168.50.1`.
+- Windows-host SSH using each VM hostname was verified for all four VMs.
+- Static hosts-file mappings were added to the Windows host and all four guests and verified with TCP and `getent hosts` checks.
+- Guest-to-guest TCP port 22 from `drl-ops-01` to the control-plane and workers was blocked by their firewall policies.
+- `drl-ops-01` UFW is inactive; TCP port 22 from `drl-k8s-cp-01` to `drl-ops-01` was reachable. This is a known firewall-baseline limitation requiring remediation before Phase 1 handoff.
 - No Kubernetes services have been installed.
 
 ### Resource Summary
@@ -89,7 +93,7 @@ Not yet implemented or verified:
 - Planned guest Internet access: outbound through host NAT only
 - Physical LAN or Internet isolation has not been independently verified;
   direct inbound access is not intended
-- Guest firewall policy for `drl-ops-01` remains unverified
+- `drl-ops-01` UFW is inactive and its inbound firewall behavior is not equivalent to the control-plane and worker baseline; remediation is pending
 - Connectivity from WSL2 or other administrative origins
 
 Existing host networks checked for overlap:
@@ -115,6 +119,10 @@ Implemented and verified:
   `192.168.50.1`
 - Worker UFW active with default-deny incoming and SSH allowed from
   `192.168.50.1`
+- Guest-to-guest TCP port 22 from `drl-ops-01` to the control-plane and workers
+  was blocked by the target UFW policies.
+- `drl-ops-01` UFW is inactive; TCP port 22 from `drl-k8s-cp-01` to
+  `drl-ops-01` was reachable.
 
 Not yet implemented or verified:
 
@@ -127,12 +135,14 @@ Not yet implemented or verified:
 
 ## DNS / Name Resolution
 
-### Approved Design - Not Yet Configured
+### Approved Design - Configured and Verified
 
 - No dedicated lab DNS server is planned initially.
 - Static hosts-file entries will provide name resolution for the four planned
   VMs.
-- Entries will need to be maintained on each guest and, if desired, the
-  Windows host.
+- Static entries are present on the Windows host and each guest for all four
+  VM hostnames and addresses.
 - There is no automatic registration or reverse DNS.
-- Name resolution is not configured or verified.
+- Windows-host hostname-based SSH succeeds for all four VMs.
+- Each guest resolves all four VM hostnames to their documented `192.168.50.x`
+  addresses with `getent hosts`.
