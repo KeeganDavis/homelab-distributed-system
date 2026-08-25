@@ -54,9 +54,8 @@ deployment begins.
 Status: complete. The dedicated Internal switch design, private subnet, static
 hostname/IP plan, hosts-file name resolution approach, and intended SSH and
 firewall boundaries were approved and documented in
-[ADR 001](../../architecture/adr/001-hyper-v-lab-network.md). No virtual
-network, guest networking, DNS, SSH, or firewall configuration has been
-implemented.
+[ADR 001](../../architecture/adr/001-hyper-v-lab-network.md). Implementation
+of the design is tracked in Chunks 3-6.
 
 ### Chunk 3: Operations VM
 
@@ -66,6 +65,11 @@ implemented.
 
 Verification: the operations VM boots reliably, has the expected identity and
 network reachability, and can be accessed through SSH.
+
+Status: complete. The `drl-ops-01` Ubuntu Server VM was created with the
+approved resources and storage paths, configured with hostname
+`drl-ops-01` and address `192.168.50.10/24`, and independently verified after
+reboot. SSH access from the Windows host was verified on TCP port 22.
 
 ### Chunk 4: Kubernetes control-plane VM
 
@@ -104,10 +108,10 @@ operate the virtual infrastructure safely.
 
 ## Current Chunk
 
-Chunk 3: Operations VM - Not started.
+Chunk 4: Kubernetes control-plane VM - Not started.
 
-Chunk 2 design work is complete. Do not begin Chunk 4 or create additional
-guests until the operations VM is independently verified.
+Chunk 3 is complete. Do not begin Chunk 4 or create additional guests until
+the user explicitly decides to proceed.
 
 ## Not Started
 

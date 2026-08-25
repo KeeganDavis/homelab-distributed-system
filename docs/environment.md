@@ -25,6 +25,21 @@ Do not document planned infrastructure here as though it already exists.
 
 ## Virtual Machines
 
+### Implemented VM
+
+| Hostname | Role | OS | Generation | CPU | RAM | IP | Storage |
+|---|---|---|---:|---:|---:|---|---|
+| drl-ops-01 | Operations server | Ubuntu Server 24.04.3 | 2 | 2 | 4 GB | `192.168.50.10/24` | `C:\Hyper-V\VMs`, `C:\Hyper-V\VHDX\drl-ops-01.vhdx` |
+
+Verification completed:
+
+- The VM boots from its installed VHDX after reboot.
+- The guest reports hostname `drl-ops-01`.
+- The guest reports address `192.168.50.10/24`.
+- The VM uses a 40 GB dynamically expanding VHDX with the default Ubuntu LVM layout.
+- The Windows host can reach the guest on TCP port 22 over `drl-lab`.
+- No control-plane or worker VMs have been created.
+
 ### Approved Pre-Provisioning Plan
 
 | Hostname | Role | OS | CPU | RAM | Planned IP |
@@ -37,36 +52,56 @@ Do not document planned infrastructure here as though it already exists.
 - Total planned guest allocation: 8 vCPU and 16 GB RAM.
 - Active VM configuration and virtual disks use the internal `C:` SSD.
 - The USB-connected `D:` drive is reserved for future VM exports and backups.
-- These are approved pre-provisioning values; no Ubuntu VMs currently exist and
-  no guest IP addresses have been configured.
+- The control-plane and worker entries remain approved pre-provisioning values;
+  they have not been created or configured.
 
 ## Networking
 
-### Approved Design - Not Yet Configured
+### Implemented and Planned Networking
 
+Implemented:
+
+- Lab subnet in use: `192.168.50.0/24`
 - Dedicated Hyper-V Internal switch: `drl-lab`
-- Lab subnet: `192.168.50.0/24`
-- Planned Windows host-side adapter and NAT gateway: `192.168.50.1`
+- Windows host-side adapter: `vEthernet (drl-lab)`
+- Windows host-side address: `192.168.50.1/24`
+- `drl-ops-01` connected to `drl-lab` with static address `192.168.50.10/24`
+- Windows host to `drl-ops-01` TCP port 22 connectivity verified
+
+Not yet implemented or verified:
+
+- Planned NAT gateway behavior using `192.168.50.1`
 - Planned guest Internet access: outbound through host NAT only
-- Direct inbound access from the physical LAN or Internet: not intended
-- Existing host networks were checked for overlap:
-  - Physical Ethernet: `192.168.1.0/24`
-  - Default Switch: `192.168.64.0/20`
-  - WSL: `172.24.96.0/20`
-- The dedicated switch, host adapter, NAT, and guest network configuration are
-  not implemented.
+- Physical LAN or Internet isolation has not been independently verified;
+  direct inbound access is not intended
+- Guest firewall policy and behavior
+- Connectivity from WSL2 or other administrative origins
+
+Existing host networks checked for overlap:
+
+- Physical Ethernet: `192.168.1.0/24`
+- Default Switch: `192.168.64.0/20`
+- WSL: `172.24.96.0/20`
 
 ## SSH
 
-### Approved Policy - Not Yet Configured
+### Implemented and Planned SSH
 
-- Windows host to all VMs over lab-subnet SSH, TCP `22`
+Implemented and verified:
+
+- Windows host to `drl-ops-01` over lab-subnet SSH, TCP `22`
+- Windows host to `drl-ops-01` using the `opsadmin` account
+- Ubuntu `openssh-server` installed; SSH service active and enabled
+
+Not yet implemented or verified:
+
 - `drl-ops-01` to the control-plane and worker VMs over SSH for administration
   and automation
-- No SSH exposure to the physical LAN or Internet
+- Physical LAN or Internet SSH exposure has not been independently verified;
+  direct exposure is not intended
 - Guest firewalls should default-deny unsolicited inbound traffic and allow
   only approved management and later cluster traffic
-- SSH and firewall configuration has not been implemented or verified.
+- Key-based authentication and password-authentication hardening
 
 ## DNS / Name Resolution
 
