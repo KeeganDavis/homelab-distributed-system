@@ -2,28 +2,109 @@
 
 ## Current Phase
 
-Phase 0: Repository Foundation
+Phase 1: Virtual Infrastructure
+
+See the [Phase 1 definition in the project plan](../project-plan.md#phase-1-virtual-infrastructure).
 
 ## Current Objective
 
-Establish the repository structure and documentation required before beginning
-the virtual infrastructure phase.
+Build and verify the local Ubuntu Server VM foundation needed for the later
+Linux administration, application, container, and Kubernetes phases. Work should
+progress in small, independently verified chunks.
 
-## Completed
+## Phase 0 Completion
 
-- Initial repository created
-- Root `AGENTS.md` created
-- Project plan created
+Phase 0: Repository Foundation is complete.
 
-## In Progress
+Completed outcomes:
 
-- Repository directory scaffold
-- Initial architecture documentation
+- Repository directory scaffold established with Git placeholders.
+- Project plan, environment notes, current-phase tracking, and task template added.
+- Architecture overview and ADR guidance added.
+- Repository guidance and pull request workflow established.
+- Phase 0 documentation and repository structure manually reviewed.
+
+## Phase 1 Work Breakdown
+
+The project plan remains the source of truth for Phase 1 scope. The following
+chunks divide that scope into small learning and verification steps:
+
+### Chunk 1: Hypervisor and host readiness
+
+- Select and configure the hypervisor.
+- Confirm storage locations and reasonable CPU/RAM allocations for concurrent desktop use.
+- Define the VM naming convention and initial inventory.
+
+Verification: the hypervisor is ready, the resource budget is documented, and
+the VM inventory is approved before creating guests.
+
+Status: complete. Microsoft Hyper-V is selected and verified; the approved
+storage paths, resource budget, and initial VM inventory are documented.
+
+### Chunk 2: Virtual network and addressing design
+
+- Define the virtual network or switch arrangement.
+- Create the hostname and IP plan for the operations, control-plane, and worker VMs.
+- Decide how local DNS or name resolution will work.
+- Document the intended SSH and firewall boundaries.
+
+Verification: the addressing and connectivity plan is written down before VM
+deployment begins.
+
+### Chunk 3: Operations VM
+
+- Create one Ubuntu Server operations VM.
+- Configure its hostname and network identity.
+- Establish administrative SSH access from the Windows host.
+
+Verification: the operations VM boots reliably, has the expected identity and
+network reachability, and can be accessed through SSH.
+
+### Chunk 4: Kubernetes control-plane VM
+
+- Create the control-plane VM from the validated Ubuntu process.
+- Apply its hostname, IP configuration, SSH access, and baseline firewall rules.
+
+Verification: the control-plane VM is independently reachable and its resource
+usage is acceptable. Kubernetes installation is out of scope for Phase 1.
+
+### Chunk 5: Worker VMs
+
+- Create worker VM 1 and verify it completely.
+- Create worker VM 2 only after worker VM 1 passes verification.
+- Apply the same identity, access, and baseline network configuration.
+
+Verification: each worker is validated independently before the next VM is
+created.
+
+### Chunk 6: Shared access and name-resolution verification
+
+- Verify SSH connectivity from the intended administrative host to every VM.
+- Verify hostname and IP resolution between the planned systems.
+- Confirm the baseline firewall behavior for required administrative traffic.
+
+Verification: expected connections succeed, prohibited connections are blocked,
+and failures are understood rather than hidden by automatic fixes.
+
+### Chunk 7: Phase 1 handoff documentation
+
+- Record the final VM inventory, hostnames, IPs, and resource allocations.
+- Document the verified access and network behavior.
+- Capture any deviations, limitations, or follow-up work for Phase 2.
+
+Verification: another session can use the documentation to understand and
+operate the virtual infrastructure safely.
+
+## Current Chunk
+
+Chunk 2: Virtual network and addressing design - Not started.
+
+Do not begin virtual network, DNS, SSH, or firewall configuration until Chunk 2
+is explicitly started.
 
 ## Not Started
 
-- Virtual infrastructure
-- Linux configuration
+- Linux administration
 - Backend application
 - Kafka
 - PostgreSQL / Redis
@@ -37,6 +118,18 @@ the virtual infrastructure phase.
 - External API
 - Real AWS validation
 
+## Phase 1 Completion Criteria
+
+Phase 1 is complete when:
+
+- The planned operations, control-plane, and two worker Ubuntu VMs exist.
+- Hostnames and IP assignments are documented and stable.
+- SSH access is verified for all planned administrative paths.
+- Name resolution works according to the documented design.
+- A baseline firewall policy is applied and verified.
+- Resource usage is reasonable for concurrent desktop use.
+- The final state and known limitations are documented.
+
 ## Current Constraints
 
 - Host: Windows 11
@@ -48,5 +141,5 @@ the virtual infrastructure phase.
 
 ## Phase Advancement
 
-Do not advance to Phase 1 until the repository foundation is complete and the
-user explicitly decides to proceed.
+Do not advance to Phase 2 until the Phase 1 completion criteria are verified
+and the user explicitly decides to proceed.
