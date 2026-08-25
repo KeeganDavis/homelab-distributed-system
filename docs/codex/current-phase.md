@@ -51,6 +51,13 @@ storage paths, resource budget, and initial VM inventory are documented.
 Verification: the addressing and connectivity plan is written down before VM
 deployment begins.
 
+Status: complete. The dedicated Internal switch design, private subnet, static
+hostname/IP plan, hosts-file name resolution approach, and intended SSH and
+firewall boundaries were approved and documented in
+[ADR 001](../../architecture/adr/001-hyper-v-lab-network.md). No virtual
+network, guest networking, DNS, SSH, or firewall configuration has been
+implemented.
+
 ### Chunk 3: Operations VM
 
 - Create one Ubuntu Server operations VM.
@@ -97,10 +104,10 @@ operate the virtual infrastructure safely.
 
 ## Current Chunk
 
-Chunk 2: Virtual network and addressing design - Not started.
+Chunk 3: Operations VM - Not started.
 
-Do not begin virtual network, DNS, SSH, or firewall configuration until Chunk 2
-is explicitly started.
+Chunk 2 design work is complete. Do not begin Chunk 4 or create additional
+guests until the operations VM is independently verified.
 
 ## Not Started
 
