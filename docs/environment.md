@@ -14,18 +14,29 @@ Do not document planned infrastructure here as though it already exists.
 
 ## Hypervisor
 
-Not yet selected.
+- Selected: Microsoft Hyper-V
+- Status: enabled and verified
+- Verification:
+  - Windows 11 Education host
+  - Hypervisor detected and Hyper-V Virtual Machine Management (`vmms`) service running automatically
+  - Required Hyper-V features enabled
+- Default VM configuration path: `C:\Hyper-V\VMs`
+- Default virtual disk path: `C:\Hyper-V\VHDX`
 
 ## Virtual Machines
 
-Not yet created.
+### Approved Pre-Provisioning Plan
 
 | Hostname | Role | OS | CPU | RAM | IP |
 |---|---|---|---:|---:|---|
-| TBD | Kubernetes control plane | Ubuntu Server | TBD | TBD | TBD |
-| TBD | Kubernetes worker 1 | Ubuntu Server | TBD | TBD | TBD |
-| TBD | Kubernetes worker 2 | Ubuntu Server | TBD | TBD | TBD |
-| TBD | Operations server | Ubuntu Server | TBD | TBD | TBD |
+| drl-k8s-cp-01 | Kubernetes control plane | Ubuntu Server | 2 | 4 GB | TBD |
+| drl-k8s-wk-01 | Kubernetes worker 1 | Ubuntu Server | 2 | 4 GB | TBD |
+| drl-k8s-wk-02 | Kubernetes worker 2 | Ubuntu Server | 2 | 4 GB | TBD |
+| drl-ops-01 | Operations server | Ubuntu Server | 2 | 4 GB | TBD |
+
+- Total planned guest allocation: 8 vCPU and 16 GB RAM.
+- Active VM configuration and virtual disks use the internal `C:` SSD.
+- The USB-connected `D:` drive is reserved for future VM exports and backups.
 
 ## Networking
 
