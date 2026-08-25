@@ -79,6 +79,14 @@ reboot. SSH access from the Windows host was verified on TCP port 22.
 Verification: the control-plane VM is independently reachable and its resource
 usage is acceptable. Kubernetes installation is out of scope for Phase 1.
 
+Status: complete. `drl-k8s-cp-01` was created with the approved storage paths,
+Generation 2 configuration, 2 vCPU, and fixed 4 GB memory. The guest reports
+hostname `drl-k8s-cp-01` and address `192.168.50.20/24`. SSH from the Windows
+host was verified on TCP port 22, and UFW was verified active with default-deny
+incoming traffic and an SSH allow rule from `192.168.50.1`. No Kubernetes
+services or worker VMs were created. NAT and DNS remain out of scope for this
+chunk.
+
 ### Chunk 5: Worker VMs
 
 - Create worker VM 1 and verify it completely.
@@ -108,9 +116,9 @@ operate the virtual infrastructure safely.
 
 ## Current Chunk
 
-Chunk 4: Kubernetes control-plane VM - Not started.
+Chunk 5: Worker VMs - Not started.
 
-Chunk 3 is complete. Do not begin Chunk 4 or create additional guests until
+Chunk 4 is complete. Do not begin Chunk 5 or create additional guests until
 the user explicitly decides to proceed.
 
 ## Not Started
