@@ -96,6 +96,14 @@ chunk.
 Verification: each worker is validated independently before the next VM is
 created.
 
+Status: complete. `drl-k8s-wk-01` was created and fully verified before
+`drl-k8s-wk-02` was created. Both workers use Generation 2, 2 vCPU, fixed 4 GB
+memory with dynamic memory disabled, approved storage paths, and the `drl-lab`
+switch. Each guest reports its approved hostname and static address, SSH from
+the Windows host was verified on TCP port 22, and UFW was verified active with
+default-deny incoming traffic and SSH allowed from `192.168.50.1`. Both workers
+were reboot-verified, and no Kubernetes services were installed.
+
 ### Chunk 6: Shared access and name-resolution verification
 
 - Verify SSH connectivity from the intended administrative host to every VM.
@@ -104,6 +112,9 @@ created.
 
 Verification: expected connections succeed, prohibited connections are blocked,
 and failures are understood rather than hidden by automatic fixes.
+
+Status: not started. The approved hosts-file name-resolution design has not yet
+been implemented or verified.
 
 ### Chunk 7: Phase 1 handoff documentation
 
@@ -116,10 +127,10 @@ operate the virtual infrastructure safely.
 
 ## Current Chunk
 
-Chunk 5: Worker VMs - Not started.
+Chunk 6: Shared access and name-resolution verification - Not started.
 
-Chunk 4 is complete. Do not begin Chunk 5 or create additional guests until
-the user explicitly decides to proceed.
+Chunk 5 is complete. Do not begin Chunk 6 implementation until the user
+explicitly decides to proceed.
 
 ## Not Started
 
