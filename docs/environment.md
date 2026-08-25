@@ -56,7 +56,8 @@ Verification completed:
 - Windows-host SSH using each VM hostname was verified for all four VMs.
 - Static hosts-file mappings were added to the Windows host and all four guests and verified with TCP and `getent hosts` checks.
 - Guest-to-guest TCP port 22 from `drl-ops-01` to the control-plane and workers was blocked by their firewall policies.
-- `drl-ops-01` UFW is inactive; TCP port 22 from `drl-k8s-cp-01` to `drl-ops-01` was reachable. This is a known firewall-baseline limitation requiring remediation before Phase 1 handoff.
+- `drl-ops-01` UFW is active with default-deny incoming traffic and SSH allowed from `192.168.50.1`.
+- TCP port 22 from the control-plane and worker guests to `drl-ops-01` was blocked after the firewall remediation.
 - No Kubernetes services have been installed.
 
 ### Resource Summary
@@ -93,7 +94,6 @@ Not yet implemented or verified:
 - Planned guest Internet access: outbound through host NAT only
 - Physical LAN or Internet isolation has not been independently verified;
   direct inbound access is not intended
-- `drl-ops-01` UFW is inactive and its inbound firewall behavior is not equivalent to the control-plane and worker baseline; remediation is pending
 - Connectivity from WSL2 or other administrative origins
 
 Existing host networks checked for overlap:
@@ -119,10 +119,12 @@ Implemented and verified:
   `192.168.50.1`
 - Worker UFW active with default-deny incoming and SSH allowed from
   `192.168.50.1`
+- Operations VM UFW active with default-deny incoming and SSH allowed from
+  `192.168.50.1`
 - Guest-to-guest TCP port 22 from `drl-ops-01` to the control-plane and workers
   was blocked by the target UFW policies.
-- `drl-ops-01` UFW is inactive; TCP port 22 from `drl-k8s-cp-01` to
-  `drl-ops-01` was reachable.
+- Guest-to-guest TCP port 22 from the control-plane and worker guests to
+  `drl-ops-01` was blocked by the operations VM UFW policy.
 
 Not yet implemented or verified:
 

@@ -113,12 +113,12 @@ were reboot-verified, and no Kubernetes services were installed.
 Verification: expected connections succeed, prohibited connections are blocked,
 and failures are understood rather than hidden by automatic fixes.
 
-Status: complete with documented limitation. Direct-IP and hostname-based SSH
+Status: complete. Direct-IP and hostname-based SSH
 from the Windows host succeeded for all four VMs. Static hosts-file mappings
 were added to the Windows host and all guests, and guest-side resolution was
-verified. The control-plane and worker firewall boundaries were verified, but
-`drl-ops-01` has UFW inactive and accepts TCP port 22 from another guest. This
-requires remediation and verification before the Phase 1 handoff.
+verified. All four guest firewall boundaries were verified with default-deny
+incoming traffic and SSH allowed from `192.168.50.1`; guest-originated TCP
+port 22 connections to the protected VMs were blocked.
 
 ### Chunk 7: Phase 1 handoff documentation
 
@@ -131,11 +131,10 @@ operate the virtual infrastructure safely.
 
 ## Current Chunk
 
-Chunk 6: Shared access and name-resolution verification - Complete with a
-documented operations-VM firewall limitation.
+Chunk 6: Shared access and name-resolution verification - Complete.
 
-Chunk 5 and Chunk 6 are complete. Do not begin Chunk 7 or Phase 2. Remediate
-and verify the `drl-ops-01` firewall boundary before the Phase 1 handoff.
+Chunk 5 and Chunk 6 are complete. Do not begin Chunk 7 or Phase 2 until the
+user explicitly decides to proceed.
 
 ## Not Started
 
