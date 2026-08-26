@@ -79,7 +79,8 @@ servers, including after reboot.
   behavior.
 
 Verification: the system state and operational changes are understood and
-repeatable on all four servers.
+repeatable on the verified canary, with fleet-wide completion still
+outstanding.
 
 ### Chunk 4: Networking and resource monitoring
 
@@ -91,16 +92,14 @@ repeatable on all four servers.
 Verification: the servers remain reachable and secure, and abnormal resource or
 network behavior can be identified from evidence.
 
-### Chunk 5: Break, recover, and document
+### Chunk 5: Document
 
-- Introduce one controlled failure at a time after the manual configuration is
-  stable.
-- Investigate from symptom to evidence, recovery, and prevention.
 - Document the manual procedures and identify what is ready for later
   automation.
 
-Verification: at least one failure is recovered successfully, the manual
-workflow is documented, and the Phase 2 completion criteria are met.
+Verification: The manual workflow, results, known limitations, and future
+automation candidates are documented; the Phase 2 completion criteria are then
+reviewed.
 
 ## Phase 2 Working Method
 
@@ -117,7 +116,7 @@ comes after the procedure is understood and verified.
 
 ## Current Chunk
 
-Chunk 2: Identity and access - Verified complete for amended canary scope.
+Chunk 3: System operations - Verified complete for `drl-ops-01` canary scope.
 
 Chunk 1 is verified complete. Its documented operating model and baseline are
 recorded in the [Phase 2 Chunk 1 operating model and baseline runbook](../../runbooks/phase-2-chunk-1-operating-model-and-baseline.md).
@@ -136,9 +135,17 @@ Ansible phase. The deferred fleet rollout must not be described as manually
 configured or verified, and the original Phase 2 criterion requiring all four
 servers remains outstanding until that future work is completed.
 
+The `drl-ops-01` canary system-operations procedure is verified. Package
+management, systemd, journald, filesystem and LVM inspection, logrotate, cron,
+and systemd timer behavior were manually inspected and recorded. The canary
+record is in the [Phase 2 Chunk 3 system operations runbook](../../runbooks/phase-2-chunk-3-system-operations.md).
+The other three VMs were not changed or verified for Chunk 3, so the original
+all-four-server criterion remains outstanding.
+
 ## Not Started
 
-- Phase 2 Chunks 3-5
+- Phase 2 Chunk 4
+- Phase 2 Chunk 5 documentation and handoff
 - Backend application
 - Kafka
 - PostgreSQL / Redis
@@ -157,6 +164,8 @@ servers remains outstanding until that future work is completed.
 - Fleet-wide Phase 2 Chunk 2 identity and access rollout, including
   post-reboot verification on the control plane and workers; planned for the
   future Ansible phase.
+- Phase 2 Chunk 3 system-operations rollout and verification on the control
+  plane and workers; not included in the canary milestone.
 
 ## Phase 2 Completion Criteria
 
@@ -167,9 +176,8 @@ Phase 2 is complete when:
 - Package management, systemd, journald, filesystem/storage, log rotation, and
   cron or systemd timers are manually practiced and verified.
 - Firewall behavior and resource monitoring are understood and verified.
-- At least one controlled failure is investigated, recovered, and documented.
-- The manual procedures, security decisions, known limitations, and future
-  automation candidates are documented.
+- The manual procedures, system-operation results, security decisions, known
+  limitations, and future automation candidates are documented.
 
 Status: started. These criteria will be evaluated as the five Phase 2
 chunks are completed and verified.
@@ -185,6 +193,5 @@ chunks are completed and verified.
 
 ## Phase Advancement
 
-Do not advance to Phase 3 until all Phase 2 chunks are verified, the Linux
-failure labs and handoff documentation are complete, and the user explicitly
-decides to proceed.
+Do not advance to Phase 3 until all Phase 2 chunks are verified, the handoff
+documentation is complete, and the user explicitly decides to proceed.
