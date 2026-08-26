@@ -2,17 +2,16 @@
 
 ## Current Phase
 
-Phase 2: Linux Administration
+Phase 3: Backend Application - starting
 
-See the [Phase 2 definition in the project plan](../project-plan.md#phase-2-linux-administration).
+See the [Phase 3 definition in the project plan](../project-plan.md#phase-3-backend-application).
 
 ## Current Objective
 
-Phase 1 is complete. Phase 2 will manually establish Linux administration
-fundamentals across the existing Ubuntu VMs using a production-shaped workflow:
-baseline, plan, canary change, verification, controlled rollout, and
-documentation. Automation will be considered only after the corresponding
-manual procedure is understood and verified.
+Build the intentionally small backend application: a synthetic event generator,
+FastAPI ingestion API, processing worker, and query API. Phase 3 is starting by
+explicit user decision even though the full Phase 2 server criteria remain
+deferred.
 
 ## Phase 0 Completion
 
@@ -46,107 +45,32 @@ infrastructure runbook](../../runbooks/phase-1-virtual-infrastructure.md), and
 [ADR 001](../../architecture/adr/001-hyper-v-lab-network.md).
 
 Status: complete.
-## Phase 2 Work Breakdown
+## Phase 2 Summary
 
-Phase 2 goal: configure all four servers manually once, verify the results, and
-then use the lessons learned to guide later automation. Keep the work practical:
-make a change, verify it, and break and recover something when the concept is
-understood.
+The Phase 2 canary learning milestone is complete for `drl-ops-01`. Chunks 1
+through 4 were performed and verified on the canary, and Chunk 5 documented the
+manual procedures, observations, limitations, and future automation candidates.
+The detailed evidence remains in the [Phase 2 Chunk 1 runbook](../../runbooks/phase-2-chunk-1-operating-model-and-baseline.md),
+[Chunk 2 runbook](../../runbooks/phase-2-chunk-2-identity-and-access.md),
+[Chunk 3 runbook](../../runbooks/phase-2-chunk-3-system-operations.md), and
+[Chunk 4 runbook](../../runbooks/phase-2-chunk-4-networking-and-resource-monitoring.md).
 
-### Chunk 1: Baseline and safe change workflow
+The control plane and both workers were not manually updated or verified for
+the deferred Phase 2 Chunk 2 and Chunk 3 work. The user has explicitly chosen
+to begin Phase 3 before those requirements are satisfied.
 
-- Capture a simple baseline for all four servers.
-- Define the access model, recovery path, canary server, and rollout order.
-- Use pre-change checks, one-server changes, verification, and recorded results.
-
-Verification: the baseline and change workflow are understood before server
-configuration begins.
-
-### Chunk 2: Identity and access
-
-- Configure users/groups, sudo, permissions, environment variables, and
-  SSH keys.
-- Apply least privilege and preserve a known-good console or SSH recovery path.
-
-Verification: permitted and denied access behaves as intended on all four
-servers, including after reboot.
-
-### Chunk 3: System operations
-
-- Practice package management, systemd, journald, filesystem and storage
-  inspection, log rotation, and cron/systemd timers.
-- Make small, observable changes and verify service, log, storage, and schedule
-  behavior.
-
-Verification: the system state and operational changes are understood and
-repeatable on the verified canary, with fleet-wide completion still
-outstanding.
-
-### Chunk 4: Networking and resource monitoring
-
-- Verify network identity, listening services, firewall rules, and required or
-  prohibited traffic.
-- Monitor CPU, memory, load, disk capacity, processes, services, and recent
-  errors.
-
-Verification: the servers remain reachable and secure, and abnormal resource or
-network behavior can be identified from evidence.
-
-### Chunk 5: Document
-
-- Document the manual procedures and identify what is ready for later
-  automation.
-
-Verification: The manual workflow, results, known limitations, and future
-automation candidates are documented; the Phase 2 completion criteria are then
-reviewed.
-
-## Phase 2 Working Method
-
-For each chunk, use this simple production-shaped loop:
-
-1. Make the smallest change on drl-ops-01 first.
-2. Verify the change, including reboot behavior when relevant.
-3. Roll out the verified change to the other three servers.
-4. Record what changed, what was observed, and how to recover it.
-
-Use least privilege, do not commit secrets, keep a recovery path open, and stop
-to investigate unexpected results. Manual configuration comes first; automation
-comes after the procedure is understood and verified.
+The deferred work must be completed during the future Phase 7 Ansible phase.
+All four servers must be updated and verified, including the deferred identity,
+access, and system-operations procedures, before the Ansible phase can be
+considered complete. At that point the outstanding Phase 2 requirements can be
+reviewed and marked satisfied.
 
 ## Current Chunk
 
-Chunk 3: System operations - Verified complete for `drl-ops-01` canary scope.
+Phase 3: Backend Application - starting.
 
-Chunk 1 is verified complete. Its documented operating model and baseline are
-recorded in the [Phase 2 Chunk 1 operating model and baseline runbook](../../runbooks/phase-2-chunk-1-operating-model-and-baseline.md).
+## Future Work Not Started
 
-The `drl-ops-01` canary identity and access procedure is verified. The canary
-now has the documented `drladmin`, `drlread`, and `drl-operators` model;
-unnecessary `lxd` membership was removed from `opsadmin`; key-only SSH,
-password-required sudo, controlled directory permissions, environment
-variables, and post-reboot behavior were verified. The manual canary record is
-in the [Phase 2 Chunk 2 identity and access runbook](../../runbooks/phase-2-chunk-2-identity-and-access.md).
-
-Scope amendment approved by the user on 2026-08-26: close Chunk 2 for the
-current manual learning milestone after the canary verification. Defer the
-rollout to `drl-k8s-cp-01`, `drl-k8s-wk-01`, and `drl-k8s-wk-02` to the future
-Ansible phase. The deferred fleet rollout must not be described as manually
-configured or verified, and the original Phase 2 criterion requiring all four
-servers remains outstanding until that future work is completed.
-
-The `drl-ops-01` canary system-operations procedure is verified. Package
-management, systemd, journald, filesystem and LVM inspection, logrotate, cron,
-and systemd timer behavior were manually inspected and recorded. The canary
-record is in the [Phase 2 Chunk 3 system operations runbook](../../runbooks/phase-2-chunk-3-system-operations.md).
-The other three VMs were not changed or verified for Chunk 3, so the original
-all-four-server criterion remains outstanding.
-
-## Not Started
-
-- Phase 2 Chunk 4
-- Phase 2 Chunk 5 documentation and handoff
-- Backend application
 - Kafka
 - PostgreSQL / Redis
 - Docker
@@ -159,28 +83,12 @@ all-four-server criterion remains outstanding.
 - External API
 - Real AWS validation
 
-## Deferred from the current manual milestone
+## Phase 2 Status
 
-- Fleet-wide Phase 2 Chunk 2 identity and access rollout, including
-  post-reboot verification on the control plane and workers; planned for the
-  future Ansible phase.
-- Phase 2 Chunk 3 system-operations rollout and verification on the control
-  plane and workers; not included in the canary milestone.
-
-## Phase 2 Completion Criteria
-
-Phase 2 is complete when:
-
-- Users, groups, sudo, permissions, environment variables, and SSH keys are
-  manually configured and verified on all four servers.
-- Package management, systemd, journald, filesystem/storage, log rotation, and
-  cron or systemd timers are manually practiced and verified.
-- Firewall behavior and resource monitoring are understood and verified.
-- The manual procedures, system-operation results, security decisions, known
-  limitations, and future automation candidates are documented.
-
-Status: started. These criteria will be evaluated as the five Phase 2
-chunks are completed and verified.
+Status: canary milestone complete; full criteria deferred until the future
+Ansible phase. The four-server identity/access and system-operations rollout
+and verification remain outstanding. Phase 2 will be considered satisfied only
+after all four servers are updated and verified during that Ansible work.
 
 ## Current Constraints
 
@@ -193,5 +101,7 @@ chunks are completed and verified.
 
 ## Phase Advancement
 
-Do not advance to Phase 3 until all Phase 2 chunks are verified, the handoff
-documentation is complete, and the user explicitly decides to proceed.
+Phase 3 is starting by explicit user decision while the documented Phase 2
+gaps remain open. Those gaps must not be represented as completed. Before the
+future Ansible phase is closed, all four servers must receive and pass the
+deferred Phase 2 updates and verification.
