@@ -2,15 +2,14 @@
 
 ## Current Phase
 
-Phase 1: Virtual Infrastructure
+Phase 1: Virtual Infrastructure - Complete
 
 See the [Phase 1 definition in the project plan](../project-plan.md#phase-1-virtual-infrastructure).
 
 ## Current Objective
 
-Build and verify the local Ubuntu Server VM foundation needed for the later
-Linux administration, application, container, and Kubernetes phases. Work should
-progress in small, independently verified chunks.
+The Phase 1 local Ubuntu Server VM foundation is complete and documented. The
+next phase remains unstarted until the user explicitly decides to proceed.
 
 ## Phase 0 Completion
 
@@ -129,11 +128,18 @@ port 22 connections to the protected VMs were blocked.
 Verification: another session can use the documentation to understand and
 operate the virtual infrastructure safely.
 
+Runbook: [Phase 1 virtual infrastructure runbook](../../runbooks/phase-1-virtual-infrastructure.md).
+
+Status: complete. The repeatable handoff procedure is documented, including
+the manual Ubuntu installation boundary, repeat-safe host and guest
+configuration commands, expected outputs, reboot checks, and final verification
+steps in the [Phase 1 virtual infrastructure runbook](../../runbooks/phase-1-virtual-infrastructure.md).
+
 ## Current Chunk
 
-Chunk 6: Shared access and name-resolution verification - Complete.
+Chunk 7: Phase 1 handoff documentation - Complete.
 
-Chunk 5 and Chunk 6 are complete. Do not begin Chunk 7 or Phase 2 until the
+Chunks 1-7 are complete. Phase 1 is finished. Do not begin Phase 2 until the
 user explicitly decides to proceed.
 
 ## Not Started
@@ -164,6 +170,10 @@ Phase 1 is complete when:
 - Resource usage is reasonable for concurrent desktop use.
 - The final state and known limitations are documented.
 
+Status: complete. All Phase 1 completion criteria were verified and the final
+state is recorded in [docs/environment.md](../environment.md). Phase 2 remains
+not started.
+
 ## Current Constraints
 
 - Host: Windows 11
@@ -175,5 +185,5 @@ Phase 1 is complete when:
 
 ## Phase Advancement
 
-Do not advance to Phase 2 until the Phase 1 completion criteria are verified
-and the user explicitly decides to proceed.
+Phase 1 completion criteria are verified. Phase 2 remains unstarted until the
+user explicitly decides to proceed.
