@@ -2,14 +2,17 @@
 
 ## Current Phase
 
-Phase 1: Virtual Infrastructure - Complete
+Phase 2: Linux Administration
 
-See the [Phase 1 definition in the project plan](../project-plan.md#phase-1-virtual-infrastructure).
+See the [Phase 2 definition in the project plan](../project-plan.md#phase-2-linux-administration).
 
 ## Current Objective
 
-The Phase 1 local Ubuntu Server VM foundation is complete and documented. The
-next phase remains unstarted until the user explicitly decides to proceed.
+Phase 1 is complete. Phase 2 will manually establish Linux administration
+fundamentals across the existing Ubuntu VMs using a production-shaped workflow:
+baseline, plan, canary change, verification, controlled rollout, and
+documentation. Automation will be considered only after the corresponding
+manual procedure is understood and verified.
 
 ## Phase 0 Completion
 
@@ -23,128 +26,202 @@ Completed outcomes:
 - Repository guidance and pull request workflow established.
 - Phase 0 documentation and repository structure manually reviewed.
 
-## Phase 1 Work Breakdown
+## Phase 1 Completion
 
-The project plan remains the source of truth for Phase 1 scope. The following
-chunks divide that scope into small learning and verification steps:
+Phase 1: Virtual Infrastructure is complete.
 
-### Chunk 1: Hypervisor and host readiness
+Completed outcomes:
 
-- Select and configure the hypervisor.
-- Confirm storage locations and reasonable CPU/RAM allocations for concurrent desktop use.
-- Define the VM naming convention and initial inventory.
+- Microsoft Hyper-V is enabled and verified on the Windows 11 host.
+- The approved Internal switch, private subnet, static VM inventory, and
+  host/guest name-resolution design are implemented.
+- Four Ubuntu Server 24.04.3 Generation 2 VMs exist with their approved
+  hostnames, static addresses, storage paths, 2 vCPU, and fixed 4 GB memory.
+- Windows-host SSH access, guest-side name resolution, and the baseline UFW
+  policy were verified, including the intended blocked guest-to-guest SSH paths.
+- Reboot verification and final handoff documentation were completed.
 
-Verification: the hypervisor is ready, the resource budget is documented, and
-the VM inventory is approved before creating guests.
+Source documents: [docs/environment.md](../environment.md), [Phase 1 virtual
+infrastructure runbook](../../runbooks/phase-1-virtual-infrastructure.md), and
+[ADR 001](../../architecture/adr/001-hyper-v-lab-network.md).
 
-Status: complete. Microsoft Hyper-V is selected and verified; the approved
-storage paths, resource budget, and initial VM inventory are documented.
+Status: complete.
+## Phase 2 Work Breakdown
 
-### Chunk 2: Virtual network and addressing design
+Phase 2 follows the Linux Administration scope in the project plan. Each chunk
+must be completed on a canary VM first, verified with evidence, and then applied
+to the remaining VMs when the change is safe to roll out. Record the commands,
+observations, deviations, and rollback or recovery steps as the work proceeds.
 
-- Define the virtual network or switch arrangement.
-- Create the hostname and IP plan for the operations, control-plane, and worker VMs.
-- Decide how local DNS or name resolution will work.
-- Document the intended SSH and firewall boundaries.
+### Chunk 1: Operating model and baseline capture
 
-Verification: the addressing and connectivity plan is written down before VM
-deployment begins.
+- Define the administrative account, group, privilege, and access model before
+  changing users or sudo.
+- Establish the change workflow: pre-change checks, one-VM canary, verification
+  gate, rollout order, rollback point, and post-change evidence.
+- Capture a baseline for hostname, IP, routes, users, groups, privileges,
+  packages, services, processes, storage, mounts, memory, CPU, and logs.
+- Decide how Hyper-V checkpoints or other recovery points will be used as a
+  learning aid; do not treat a checkpoint as a production backup.
 
-Status: complete. The dedicated Internal switch design, private subnet, static
-hostname/IP plan, hosts-file name resolution approach, and intended SSH and
-firewall boundaries were approved and documented in
-[ADR 001](../../architecture/adr/001-hyper-v-lab-network.md). Implementation
-of the design is tracked in Chunks 3-6.
+Verification: the baseline is captured for all four VMs, the intended change
+scope is written down, and the canary and rollout order are approved before
+configuration changes begin.
 
-### Chunk 3: Operations VM
+Status: ready to begin. No Phase 2 configuration changes have been made.
 
-- Create one Ubuntu Server operations VM.
-- Configure its hostname and network identity.
-- Establish administrative SSH access from the Windows host.
+### Chunk 2: Users, groups, permissions, and sudo
 
-Verification: the operations VM boots reliably, has the expected identity and
-network reachability, and can be accessed through SSH.
+- Implement the approved least-privilege account and group model.
+- Practice ownership, modes, umask, ACL awareness, and permission diagnosis.
+- Configure and verify narrowly scoped sudo access without locking out the
+  existing administrative path.
+- Test both permitted and denied operations using separate sessions or test
+  accounts where appropriate.
 
-Status: complete. The `drl-ops-01` Ubuntu Server VM was created with the
-approved resources and storage paths, configured with hostname
-`drl-ops-01` and address `192.168.50.10/24`, and independently verified after
-reboot. SSH access from the Windows host was verified on TCP port 22.
+Verification: account and group membership are correct, privileged and
+unprivileged actions behave as designed, file access tests pass, and the
+original recovery/admin path remains available.
 
-### Chunk 4: Kubernetes control-plane VM
+### Chunk 3: SSH administration and hardening
 
-- Create the control-plane VM from the validated Ubuntu process.
-- Apply its hostname, IP configuration, SSH access, and baseline firewall rules.
+- Establish key-based SSH access from the Windows administrative host without
+  committing private keys or passwords.
+- Preserve a second known-good session or console path during changes.
+- Review effective sshd configuration, authentication behavior, service state,
+  and the existing UFW source restriction.
+- Apply only approved hardening changes, then verify both successful access and
+  rejected access.
 
-Verification: the control-plane VM is independently reachable and its resource
-usage is acceptable. Kubernetes installation is out of scope for Phase 1.
+Verification: key-based administrative access works to every intended VM,
+unapproved authentication or source paths are rejected as designed, and a
+reboot does not remove access.
 
-Status: complete. `drl-k8s-cp-01` was created with the approved storage paths,
-Generation 2 configuration, 2 vCPU, and fixed 4 GB memory. The guest reports
-hostname `drl-k8s-cp-01` and address `192.168.50.20/24`. SSH from the Windows
-host was verified on TCP port 22, and UFW was verified active with default-deny
-incoming traffic and an SSH allow rule from `192.168.50.1`. No Kubernetes
-services or worker VMs were created. NAT and DNS remain out of scope for this
-chunk.
+### Chunk 4: Packages and update management
 
-### Chunk 5: Worker VMs
+- Learn apt repository, cache, package installation, removal, upgrade, and
+  held-package behavior.
+- Establish a documented update procedure with pre-change and post-change
+  package inventory.
+- Identify services that require restart after updates and verify them.
+- Do not introduce unattended upgrades or a new patching policy without first
+  documenting the choice and its tradeoffs.
 
-- Create worker VM 1 and verify it completely.
-- Create worker VM 2 only after worker VM 1 passes verification.
-- Apply the same identity, access, and baseline network configuration.
+Verification: a controlled package change succeeds on the canary, package
+state is recorded before and after, required services remain healthy, and the
+same procedure can be repeated without unexplained errors.
 
-Verification: each worker is validated independently before the next VM is
-created.
+### Chunk 5: Processes and systemd
 
-Status: complete. `drl-k8s-wk-01` was created and fully verified before
-`drl-k8s-wk-02` was created. Both workers use Generation 2, 2 vCPU, fixed 4 GB
-memory with dynamic memory disabled, approved storage paths, and the `drl-lab`
-switch. Each guest reports its approved hostname and static address, SSH from
-the Windows host was verified on TCP port 22, and UFW was verified active with
-default-deny incoming traffic and SSH allowed from `192.168.50.1`. Both workers
-were reboot-verified, and no Kubernetes services were installed.
+- Inspect processes, parent/child relationships, signals, priorities, and
+  resource use.
+- Learn systemd unit status, dependencies, enablement, restart behavior, and
+  failure reporting.
+- Practice a controlled service lifecycle change and document its impact.
+- Use journal and service evidence rather than assuming a process is healthy
+  because it exists.
 
-### Chunk 6: Shared access and name-resolution verification
+Verification: process and systemd checks identify the expected state, a
+controlled stop/start or restart is recovered and verified, and the procedure
+has a documented rollback or recovery path.
 
-- Verify SSH connectivity from the intended administrative host to every VM.
-- Verify hostname and IP resolution between the planned systems.
-- Confirm the baseline firewall behavior for required administrative traffic.
+### Chunk 6: Journald and log rotation
 
-Verification: expected connections succeed, prohibited connections are blocked,
-and failures are understood rather than hidden by automatic fixes.
+- Inspect logs with journalctl by boot, unit, priority, time, and failure.
+- Decide and document the learning-lab journal persistence and retention
+  settings.
+- Learn logrotate configuration, rotation triggers, permissions, compression,
+  and retention.
+- Generate a controlled test event and verify that it is discoverable and
+  handled according to the documented policy.
 
-Status: complete. Direct-IP and hostname-based SSH
-from the Windows host succeeded for all four VMs. Static hosts-file mappings
-were added to the Windows host and all guests, and guest-side resolution was
-verified. All four guest firewall boundaries were verified with default-deny
-incoming traffic and SSH allowed from `192.168.50.1`; guest-originated TCP
-port 22 connections to the protected VMs were blocked.
+Verification: required service and system events can be located, journal and
+rotated-log retention is understood, and no log policy change causes loss of
+the evidence needed for troubleshooting.
 
-### Chunk 7: Phase 1 handoff documentation
+### Chunk 7: Storage and filesystems
 
-- Record the final VM inventory, hostnames, IPs, and resource allocations.
-- Document the verified access and network behavior.
-- Capture any deviations, limitations, or follow-up work for Phase 2.
+- Inventory block devices, partitions, filesystems, mounts, UUIDs, and free
+  space without changing the approved VM disks accidentally.
+- Practice safe directory, mount, ownership, and capacity checks.
+- Learn how to identify disk pressure and inode pressure and how to recover
+  from a controlled test condition.
+- Document what is persistent across reboot and what is temporary.
 
-Verification: another session can use the documentation to understand and
-operate the virtual infrastructure safely.
+Verification: storage and filesystem state is understood on every VM, mount
+and capacity checks produce expected results after reboot, and any test change
+has a documented recovery procedure.
 
-Runbook: [Phase 1 virtual infrastructure runbook](../../runbooks/phase-1-virtual-infrastructure.md).
+### Chunk 8: Networking and firewall operations
 
-Status: complete. The repeatable handoff procedure is documented, including
-the manual Ubuntu installation boundary, repeat-safe host and guest
-configuration commands, expected outputs, reboot checks, and final verification
-steps in the [Phase 1 virtual infrastructure runbook](../../runbooks/phase-1-virtual-infrastructure.md).
+- Inspect interfaces, addresses, routes, neighbor state, name resolution, and
+  listening sockets.
+- Reconfirm the approved Phase 1 network identity before making changes.
+- Practice a controlled UFW rule lifecycle, including ordering, source
+  restriction, logging, verification, and rollback.
+- Test required administrative traffic and prohibited traffic from the
+  correct source systems.
+
+Verification: no address or route drift exists, required SSH access works,
+prohibited traffic remains blocked, and firewall changes are explainable from
+the resulting rules and connection evidence.
+
+### Chunk 9: Resource monitoring and operational checks
+
+- Build a lightweight recurring check for CPU, memory, load, disk capacity,
+  inode use, network state, processes, services, and recent errors.
+- Capture normal resource observations for the four-VM desktop-constrained
+  environment.
+- Define symptoms that should trigger investigation rather than automatic
+  remediation.
+- Practice comparing current state with the captured baseline.
+
+Verification: resource and health checks produce repeatable evidence, normal
+behavior is documented, and abnormal results lead to an investigation path.
+
+### Chunk 10: Linux failure labs and Phase 2 handoff
+
+- Introduce one controlled Linux failure at a time after the preceding chunks
+  are stable, such as a stopped service, a bad permission, log growth, or a
+  deliberately incorrect firewall rule.
+- Investigate from symptom to evidence, hypothesis, root cause, mitigation,
+  recovery verification, and prevention.
+- Record the exercise as an incident or troubleshooting document without
+  revealing the fault before investigation.
+- Consolidate verified procedures into runbooks and identify which procedures
+  are ready for later automation.
+
+Verification: each failure lab has an observable symptom, evidence trail,
+recovery proof, and follow-up action. The Phase 2 manual procedures and known
+limitations are documented before Phase 3 is considered.
+
+## Phase 2 operating workflow
+
+Every configuration change should use this sequence:
+
+1. State the objective, scope, expected impact, and rollback or recovery path.
+2. Capture the relevant pre-change state.
+3. Apply the smallest manual change to the canary VM.
+4. Verify service, security, networking, data, and reboot behavior as relevant.
+5. Stop and investigate if evidence differs from the expected result.
+6. Roll out to the remaining VMs only after the canary passes.
+7. Record the final state, deviations, and any automation candidate.
+
+The canary is initially drl-ops-01 unless a chunk documents a safer target.
+The existing Windows-to-guest SSH path and Hyper-V console are recovery paths;
+they must remain available while access changes are being tested.
 
 ## Current Chunk
 
-Chunk 7: Phase 1 handoff documentation - Complete.
+Chunk 1: Operating model and baseline capture - Ready to begin.
 
-Chunks 1-7 are complete. Phase 1 is finished. Do not begin Phase 2 until the
-user explicitly decides to proceed.
+Phase 2 is active, but no Phase 2 implementation work is complete yet. Do not
+begin Chunk 2 until Chunk 1's baseline and change-control verification gate has
+passed.
 
 ## Not Started
 
-- Linux administration
+- Phase 2 Chunks 1-10, except for the Phase 2 plan above
 - Backend application
 - Kafka
 - PostgreSQL / Redis
@@ -158,22 +235,32 @@ user explicitly decides to proceed.
 - External API
 - Real AWS validation
 
-## Phase 1 Completion Criteria
+## Phase 2 Completion Criteria
 
-Phase 1 is complete when:
+Phase 2 is complete when:
 
-- The planned operations, control-plane, and two worker Ubuntu VMs exist.
-- Hostnames and IP assignments are documented and stable.
-- SSH access is verified for all planned administrative paths.
-- Name resolution works according to the documented design.
-- A baseline firewall policy is applied and verified.
-- Resource usage is reasonable for concurrent desktop use.
-- The final state and known limitations are documented.
+- The approved account, group, permission, and sudo model is documented and
+  verified with both permitted and denied actions.
+- Key-based SSH administration and any approved hardening are verified after
+  reboot without losing the recovery path.
+- Package state and the controlled update procedure are documented and verified.
+- Process and systemd checks, lifecycle operations, and recovery evidence are
+  documented.
+- Journald and logrotate behavior, retention, and test-event investigation are
+  understood and verified.
+- Storage, filesystem, mount, capacity, and reboot behavior are documented and
+  verified without unintended disk changes.
+- Network identity, routes, listening sockets, UFW rules, and required or
+  prohibited traffic are verified without Phase 1 drift.
+- Resource and health checks produce repeatable evidence and normal operating
+  observations are documented.
+- At least one controlled Linux failure lab is investigated from symptom through
+  recovery and prevention, with an incident or troubleshooting record.
+- Verified manual procedures, limitations, and candidates for later automation
+  are documented before Phase 3 begins.
 
-Status: complete. All Phase 1 completion criteria were verified and the final
-state is recorded in [docs/environment.md](../environment.md). Phase 2 remains
-not started.
-
+Status: not started. These criteria will be evaluated as the Phase 2 chunks are
+completed and verified.
 ## Current Constraints
 
 - Host: Windows 11
@@ -185,5 +272,6 @@ not started.
 
 ## Phase Advancement
 
-Phase 1 completion criteria are verified. Phase 2 remains unstarted until the
-user explicitly decides to proceed.
+Do not advance to Phase 3 until all Phase 2 chunks are verified, the Linux
+failure labs and handoff documentation are complete, and the user explicitly
+decides to proceed.
