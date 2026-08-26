@@ -117,17 +117,28 @@ comes after the procedure is understood and verified.
 
 ## Current Chunk
 
-Chunk 1: Baseline and safe change workflow - Verified complete.
+Chunk 2: Identity and access - Verified complete for amended canary scope.
 
-The baseline and change-control verification gate passed. The documented
-operating model and baseline are recorded in the [Phase 2 Chunk 1 operating
-model and baseline runbook](../../runbooks/phase-2-chunk-1-operating-model-and-baseline.md).
-Chunk 2 has not started; do not begin it until the user explicitly decides to
-advance.
+Chunk 1 is verified complete. Its documented operating model and baseline are
+recorded in the [Phase 2 Chunk 1 operating model and baseline runbook](../../runbooks/phase-2-chunk-1-operating-model-and-baseline.md).
+
+The `drl-ops-01` canary identity and access procedure is verified. The canary
+now has the documented `drladmin`, `drlread`, and `drl-operators` model;
+unnecessary `lxd` membership was removed from `opsadmin`; key-only SSH,
+password-required sudo, controlled directory permissions, environment
+variables, and post-reboot behavior were verified. The manual canary record is
+in the [Phase 2 Chunk 2 identity and access runbook](../../runbooks/phase-2-chunk-2-identity-and-access.md).
+
+Scope amendment approved by the user on 2026-08-26: close Chunk 2 for the
+current manual learning milestone after the canary verification. Defer the
+rollout to `drl-k8s-cp-01`, `drl-k8s-wk-01`, and `drl-k8s-wk-02` to the future
+Ansible phase. The deferred fleet rollout must not be described as manually
+configured or verified, and the original Phase 2 criterion requiring all four
+servers remains outstanding until that future work is completed.
 
 ## Not Started
 
-- Phase 2 Chunks 2-5
+- Phase 2 Chunks 3-5
 - Backend application
 - Kafka
 - PostgreSQL / Redis
@@ -140,6 +151,12 @@ advance.
 - Reliability engineering
 - External API
 - Real AWS validation
+
+## Deferred from the current manual milestone
+
+- Fleet-wide Phase 2 Chunk 2 identity and access rollout, including
+  post-reboot verification on the control plane and workers; planned for the
+  future Ansible phase.
 
 ## Phase 2 Completion Criteria
 

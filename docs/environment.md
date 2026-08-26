@@ -114,6 +114,8 @@ Implemented and verified:
 - Windows host to `drl-k8s-cp-01` using the `opsadmin` account
 - Windows host to `drl-k8s-wk-01` over lab-subnet SSH, TCP `22`, using `opsadmin`
 - Windows host to `drl-k8s-wk-02` over lab-subnet SSH, TCP `22`, using `opsadmin`
+- Windows host to `drl-ops-01` as `drladmin` using a dedicated Ed25519 key,
+  with password authentication disabled during verification
 - Ubuntu `openssh-server` installed; SSH service active and enabled
 - Control-plane UFW active with default-deny incoming and SSH allowed from
   `192.168.50.1`
@@ -133,7 +135,10 @@ Not yet implemented or verified:
 - Physical LAN or Internet SSH exposure has not been independently verified;
   direct exposure is not intended
 - Later cluster traffic rules remain unconfigured
-- Key-based authentication and password-authentication hardening
+- Key-based access for `drl-k8s-cp-01`, `drl-k8s-wk-01`, and `drl-k8s-wk-02`
+  remains deferred to the future Ansible phase
+- Password-authentication hardening; password recovery remains intentionally
+  enabled
 
 ## DNS / Name Resolution
 
