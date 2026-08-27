@@ -67,7 +67,7 @@ reviewed and marked satisfied.
 
 ## Current Chunk
 
-Phase 3, Chunk 1: Backend foundation and event contract - complete.
+Phase 3, Chunk 2: Ingestion API - complete.
 
 ## Phase 3 Work Breakdown
 
@@ -78,14 +78,19 @@ work.
 
 ### Chunk 1: Backend foundation and event contract
 
+Status: complete.
+
 Create the Python project structure, configuration and logging foundation,
 FastAPI application skeleton, health endpoint, and shared event model with
 validation and tests.
 
 ### Chunk 2: Ingestion API
 
+Status: complete.
+
 Implement `POST /events`, request validation, error responses, and handoff to a
-simple in-memory queue with API tests.
+
+Delivered and verified. See [Phase 3 Chunk 2 documentation](../phase-3-chunk-2-ingestion-api.md).
 
 ### Chunk 3: Processing worker
 
