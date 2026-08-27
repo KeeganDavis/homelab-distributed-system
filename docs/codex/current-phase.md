@@ -67,7 +67,43 @@ reviewed and marked satisfied.
 
 ## Current Chunk
 
-Phase 3: Backend Application - starting.
+Phase 3, Chunk 1: Backend foundation and event contract - complete.
+
+## Phase 3 Work Breakdown
+
+Phase 3 builds the intentionally small backend application using local,
+in-memory adapters. Kafka and PostgreSQL will be introduced in Phase 4 and 5; Docker,
+Jenkins, Ansible, Terraform, Kubernetes, and observability remain later-phase
+work.
+
+### Chunk 1: Backend foundation and event contract
+
+Create the Python project structure, configuration and logging foundation,
+FastAPI application skeleton, health endpoint, and shared event model with
+validation and tests.
+
+### Chunk 2: Ingestion API
+
+Implement `POST /events`, request validation, error responses, and handoff to a
+simple in-memory queue with API tests.
+
+### Chunk 3: Processing worker
+
+Implement the worker process or CLI, consume events from the in-memory queue,
+perform basic processing, and maintain an in-memory processed-event store.
+
+### Chunk 4: Query API
+
+Implement a query endpoint for processed events with simple lookup or filtering,
+tests, and a clear boundary for a future PostgreSQL read model.
+
+### Chunk 5: Synthetic generator and local end-to-end flow
+
+Build a generator that sends events to the ingestion API, verify the local
+ingestion-to-processing-to-query flow, and document the result.
+
+Each chunk is a learning and verification checkpoint. Individual chunks may be
+implemented through several small, coherent commits.
 
 ## Future Work Not Started
 
