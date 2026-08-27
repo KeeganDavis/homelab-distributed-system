@@ -67,7 +67,7 @@ reviewed and marked satisfied.
 
 ## Current Chunk
 
-Phase 3, Chunk 2: Ingestion API - complete.
+Phase 3, Chunk 3: Processing worker - complete.
 
 ## Phase 3 Work Breakdown
 
@@ -94,10 +94,16 @@ Delivered and verified. See [Phase 3 Chunk 2 documentation](../phase-3-chunk-2-i
 
 ### Chunk 3: Processing worker
 
+Status: complete.
+
 Implement the worker process or CLI, consume events from the in-memory queue,
 perform basic processing, and maintain an in-memory processed-event store.
 
+Delivered and verified. See [Phase 3 Chunk 3 documentation](../phase-3-chunk-3-processing-worker.md).
+
 ### Chunk 4: Query API
+
+Status: not started.
 
 Implement a query endpoint for processed events with simple lookup or filtering,
 tests, and a clear boundary for a future PostgreSQL read model.
