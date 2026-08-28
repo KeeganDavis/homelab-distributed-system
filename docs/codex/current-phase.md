@@ -2,16 +2,22 @@
 
 ## Current Phase
 
-Phase 3: Backend Application - in progress
+Phase 3: Backend Application - complete.
 
-See the [Phase 3 definition in the project plan](../project-plan.md#phase-3-backend-application).
+Phase 4: Data and Messaging - in progress; Chunk 1 complete.
+
+See the [Phase 3 definition](../project-plan.md#phase-3-backend-application)
+and [Phase 4 definition](../project-plan.md#phase-4-data-and-messaging) in the
+project plan.
 
 ## Current Objective
 
-Build the intentionally small backend application: a synthetic event generator,
-FastAPI ingestion API, processing worker, and query API. Phase 3 is in progress
-by explicit user decision even though the full Phase 2 server criteria remain
-deferred.
+Phase 3's intentionally small backend application is complete and verified.
+Phase 4 Chunk 1 established and verified the PostgreSQL foundation on
+`drl-ops-01`: PostgreSQL 16, the `drl` database, the least-privilege
+`drl_app` role, the processed-event schema, and a tested repository boundary.
+Kafka, Redis, and runtime application integration have not started. The Phase 2
+server criteria remain deferred by explicit user decision.
 
 ## Phase 0 Completion
 
@@ -67,66 +73,87 @@ reviewed and marked satisfied.
 
 ## Current Chunk
 
-Phase 3, Chunk 5: Synthetic generator and local end-to-end flow - complete.
+Phase 4, Chunk 1: PostgreSQL foundation and data model - complete and
+verified. Do not begin Chunk 2 without an explicit user decision.
 
-## Phase 3 Work Breakdown
+## Phase 3 Completion
 
-Phase 3 builds the intentionally small backend application using local,
-in-memory adapters. Kafka and PostgreSQL will be introduced in Phase 4 and 5; Docker,
-Jenkins, Ansible, Terraform, Kubernetes, and observability remain later-phase
-work.
+Phase 3: Backend Application is complete.
 
-### Chunk 1: Backend foundation and event contract
+Completed outcomes:
 
-Status: complete.
+- Created the Python/FastAPI project foundation, health endpoint, shared event
+  contract, configuration, and logging.
+- Added `POST /events` and an application-owned process-local FIFO queue.
+- Added a manually controlled worker that normalizes event types and saves
+  processed events to an in-memory store.
+- Added `GET /processed-events`, including optional event-ID filtering.
+- Added a synthetic generator and verified the local
+  ingestion-to-processing-to-query flow using localhost HTTP.
 
-Create the Python project structure, configuration and logging foundation,
-FastAPI application skeleton, health endpoint, and shared event model with
-validation and tests.
+Verification: 27 tests passed with `python -m pytest -q`.
 
-### Chunk 2: Ingestion API
+Source documentation:
 
-Status: complete.
+- [Chunk 2: Ingestion API](../phase-3-chunk-2-ingestion-api.md)
+- [Chunk 3: Processing Worker](../phase-3-chunk-3-processing-worker.md)
+- [Chunk 4: Query API](../phase-3-chunk-4-query-api.md)
+- [Chunk 5: Synthetic Generator and Local Flow](../phase-3-chunk-5-synthetic-generator-and-local-flow.md)
 
-Implement `POST /events`, request validation, error responses, and handoff to a
+The Phase 3 queue and processed-event store are intentionally process-local and
+in memory. They are learning-stage adapters, not a production multi-process
+design.
 
-Delivered and verified. See [Phase 3 Chunk 2 documentation](../phase-3-chunk-2-ingestion-api.md).
+## Phase 4 Plan: Data and Messaging
 
-### Chunk 3: Processing worker
+Status: in progress; Chunk 1 complete. Chunks 2 through 5 have not started.
 
-Status: complete.
+Phase 4 will replace the learning-stage in-memory boundaries in small,
+verifiable steps. Redis is not planned as a default component: it will be
+introduced only if a concrete caching or temporary-state requirement is
+identified.
 
-Implement the worker process or CLI, consume events from the in-memory queue,
-perform basic processing, and maintain an in-memory processed-event store.
+### Chunk 1: PostgreSQL foundation and data model
 
-Delivered and verified. See [Phase 3 Chunk 3 documentation](../phase-3-chunk-3-processing-worker.md).
+Install and operate PostgreSQL manually, define the smallest processed-event
+schema, and add a narrowly scoped repository boundary with focused tests.
+Verify connectivity, schema creation, and persistence independently of Kafka.
 
-### Chunk 4: Query API
+Status: complete and verified. See the
+[Chunk 1 record](../phase-4-chunk-1-postgresql-foundation.md).
 
-Status: complete.
+### Chunk 2: Kafka KRaft foundation
 
-Implement a query endpoint for processed events with simple lookup or filtering,
-tests, and a clear boundary for a future PostgreSQL read model.
+Install and operate a single local Kafka broker in KRaft mode. Create and
+inspect an event topic, then practice producer and consumer commands before
+connecting application code. Verify topics, partitions, records, and offsets.
 
-Delivered and verified. See [Phase 3 Chunk 4 documentation](../phase-3-chunk-4-query-api.md).
+### Chunk 3: Ingestion producer integration
 
-### Chunk 5: Synthetic generator and local end-to-end flow
+Replace only the ingestion API's in-memory queue handoff with a Kafka producer.
+Keep the existing event contract and request behavior where possible. Verify an
+accepted request produces one record in the intended topic.
 
-Status: complete.
+### Chunk 4: Worker consumer and PostgreSQL read model
 
-Added a synthetic event generator that submits valid events through the
-ingestion API, plus focused and local end-to-end verification. The local-flow
-test uses real localhost HTTP, explicitly invokes the manual worker step, and
-confirms the query API returns the worker-normalized result. See [Phase 3
-Chunk 5 documentation](../phase-3-chunk-5-synthetic-generator-and-local-flow.md).
+Replace the worker's in-memory queue consumption with a Kafka consumer and
+write processed events through the PostgreSQL repository boundary. Update the
+query API to read from PostgreSQL. Verify consumer-group and offset behavior,
+worker normalization, durable results, and query results after a restart.
 
-Each chunk is a learning and verification checkpoint. Individual chunks may be
-implemented through several small, coherent commits.
+### Chunk 5: Delivery behavior and end-to-end verification
 
-## Future Work Not Started
+Exercise and document partitions, offsets, consumer groups, backpressure,
+retry behavior, and idempotency limits using controlled local scenarios. Verify
+the complete generator-to-query flow and document operational procedures,
+limitations, and deferred work.
 
-- Kafka
-- PostgreSQL / Redis
+Each Phase 4 chunk is a learning and verification checkpoint. Do not begin a
+later chunk until its predecessor is verified.
+
+## Later Phases Not Started
+
+- Redis
 - Docker
 - Jenkins
 - Ansible
@@ -155,7 +182,8 @@ after all four servers are updated and verified during that Ansible work.
 
 ## Phase Advancement
 
-Phase 3 is in progress by explicit user decision while the documented Phase 2
-gaps remain open. Those gaps must not be represented as completed. Before the
-future Ansible phase is closed, all four servers must receive and pass the
-deferred Phase 2 updates and verification.
+Phase 3 is complete and Phase 4 Chunk 1 is complete. Starting any later
+Phase 4 chunk requires an explicit user decision. The documented Phase 2 gaps
+remain open and must not be represented as completed. Before the future Ansible
+phase is closed, all four servers must receive and pass the deferred Phase 2
+updates and verification.

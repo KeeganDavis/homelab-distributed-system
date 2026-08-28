@@ -2,7 +2,7 @@ from queue import Empty
 
 from .events import Event
 from .in_memory_queue import EventQueue
-from .processed_event_store import InMemoryProcessedEventStore
+from .processed_event_repository import ProcessedEventRepository
 from .processed_events import ProcessedEvent
 
 
@@ -12,7 +12,7 @@ class EventProcessingWorker:
     def __init__(
         self,
         event_queue: EventQueue,
-        processed_event_store: InMemoryProcessedEventStore,
+        processed_event_store: ProcessedEventRepository,
     ) -> None:
         self._event_queue = event_queue
         self._processed_event_store = processed_event_store

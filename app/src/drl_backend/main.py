@@ -6,6 +6,7 @@ from fastapi import FastAPI, status
 from .events import Event
 from .in_memory_queue import EventQueue
 from .logging_config import configure_logging
+from .processed_event_repository import ProcessedEventRepository
 from .processed_event_store import InMemoryProcessedEventStore
 from .processed_events import ProcessedEvent
 from .worker import EventProcessingWorker
@@ -13,7 +14,7 @@ from .worker import EventProcessingWorker
 configure_logging()
 logger = logging.getLogger(__name__)
 event_queue = EventQueue()
-processed_event_store = InMemoryProcessedEventStore()
+processed_event_store: ProcessedEventRepository = InMemoryProcessedEventStore()
 event_worker = EventProcessingWorker(event_queue, processed_event_store)
 
 app = FastAPI(
