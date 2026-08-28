@@ -67,7 +67,7 @@ reviewed and marked satisfied.
 
 ## Current Chunk
 
-Phase 3, Chunk 4: Query API - complete.
+Phase 3, Chunk 5: Synthetic generator and local end-to-end flow - complete.
 
 ## Phase 3 Work Breakdown
 
@@ -112,8 +112,13 @@ Delivered and verified. See [Phase 3 Chunk 4 documentation](../phase-3-chunk-4-q
 
 ### Chunk 5: Synthetic generator and local end-to-end flow
 
-Build a generator that sends events to the ingestion API, verify the local
-ingestion-to-processing-to-query flow, and document the result.
+Status: complete.
+
+Added a synthetic event generator that submits valid events through the
+ingestion API, plus focused and local end-to-end verification. The local-flow
+test uses real localhost HTTP, explicitly invokes the manual worker step, and
+confirms the query API returns the worker-normalized result. See [Phase 3
+Chunk 5 documentation](../phase-3-chunk-5-synthetic-generator-and-local-flow.md).
 
 Each chunk is a learning and verification checkpoint. Individual chunks may be
 implemented through several small, coherent commits.
