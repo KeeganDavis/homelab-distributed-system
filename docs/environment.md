@@ -84,14 +84,16 @@ Implemented:
 - `drl-k8s-cp-01` connected to `drl-lab` with static address `192.168.50.20/24`
 - `drl-k8s-wk-01` connected to `drl-lab` with static address `192.168.50.21/24`
 - `drl-k8s-wk-02` connected to `drl-lab` with static address `192.168.50.22/24`
+- Windows NAT `drl-lab-nat` is active for `192.168.50.0/24`
+- `drl-ops-01` uses `192.168.1.1` as its upstream DNS resolver and has verified
+  outbound package access through the host NAT
 - Windows host to `drl-ops-01` TCP port 22 connectivity verified
 - Windows host to `drl-k8s-cp-01` TCP port 22 connectivity verified
 - Windows host to both worker VMs TCP port 22 connectivity verified
 
 Not yet implemented or verified:
 
-- Planned NAT gateway behavior using `192.168.50.1`
-- Planned guest Internet access: outbound through host NAT only
+- Outbound Internet access from the control-plane and worker VMs
 - Physical LAN or Internet isolation has not been independently verified;
   direct inbound access is not intended
 - Connectivity from WSL2 or other administrative origins
