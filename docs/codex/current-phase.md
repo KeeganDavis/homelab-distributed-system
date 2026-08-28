@@ -2,15 +2,15 @@
 
 ## Current Phase
 
-Phase 3: Backend Application - starting
+Phase 3: Backend Application - in progress
 
 See the [Phase 3 definition in the project plan](../project-plan.md#phase-3-backend-application).
 
 ## Current Objective
 
 Build the intentionally small backend application: a synthetic event generator,
-FastAPI ingestion API, processing worker, and query API. Phase 3 is starting by
-explicit user decision even though the full Phase 2 server criteria remain
+FastAPI ingestion API, processing worker, and query API. Phase 3 is in progress
+by explicit user decision even though the full Phase 2 server criteria remain
 deferred.
 
 ## Phase 0 Completion
@@ -67,7 +67,7 @@ reviewed and marked satisfied.
 
 ## Current Chunk
 
-Phase 3, Chunk 3: Processing worker - complete.
+Phase 3, Chunk 4: Query API - complete.
 
 ## Phase 3 Work Breakdown
 
@@ -103,10 +103,12 @@ Delivered and verified. See [Phase 3 Chunk 3 documentation](../phase-3-chunk-3-p
 
 ### Chunk 4: Query API
 
-Status: not started.
+Status: complete.
 
 Implement a query endpoint for processed events with simple lookup or filtering,
 tests, and a clear boundary for a future PostgreSQL read model.
+
+Delivered and verified. See [Phase 3 Chunk 4 documentation](../phase-3-chunk-4-query-api.md).
 
 ### Chunk 5: Synthetic generator and local end-to-end flow
 
@@ -148,7 +150,7 @@ after all four servers are updated and verified during that Ansible work.
 
 ## Phase Advancement
 
-Phase 3 is starting by explicit user decision while the documented Phase 2
+Phase 3 is in progress by explicit user decision while the documented Phase 2
 gaps remain open. Those gaps must not be represented as completed. Before the
 future Ansible phase is closed, all four servers must receive and pass the
 deferred Phase 2 updates and verification.
